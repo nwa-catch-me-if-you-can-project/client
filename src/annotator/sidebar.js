@@ -8,6 +8,8 @@ import features from './features';
 
 import Guest from './guest';
 import { ToolbarController } from './toolbar';
+import { createShadowRoot } from './util/shadow-root';
+import BucketBar from './plugin/bucket-bar';
 
 /**
  * @typedef LayoutState
@@ -20,9 +22,7 @@ import { ToolbarController } from './toolbar';
 const MIN_RESIZE = 280;
 
 const defaultConfig = {
-  BucketBar: {
-    container: '.annotator-frame',
-  },
+  BucketBar: {},
 };
 
 /**
@@ -80,12 +80,26 @@ export default class Sidebar extends Guest {
         frame.classList.add('annotator-frame--theme-clean');
       }
 
-      element.appendChild(frame);
+      // Wrap up the 'frame' element into a shadow DOM so it is not affected by host CSS styles
+      const hypothesisSidebar = document.createElement('hypothesis-sidebar');
+      const shadowDom = createShadowRoot(hypothesisSidebar);
+      shadowDom.appendChild(frame);
+
+      element.appendChild(hypothesisSidebar);
     }
 
     const sidebarFrame = createSidebarIframe(config);
 
     super(element, { ...defaultConfig, ...config });
+
+    // The instantiation of the BucketBar plugin can't be done as other plugin.
+    // The sidebar must be inserted inside a shadow DOM which is not accessible
+    // via a common querySelector.
+    this.plugins.BucketBar = new BucketBar(
+      frame || element,
+      defaultConfig.BucketBar || {},
+      this
+    );
 
     this.externalFrame = externalFrame;
     this.frame = frame;

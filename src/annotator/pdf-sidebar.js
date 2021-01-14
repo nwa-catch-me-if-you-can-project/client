@@ -8,7 +8,6 @@ import Sidebar from './sidebar';
 const defaultConfig = {
   PDF: {},
   BucketBar: {
-    container: '.annotator-frame',
     scrollables: ['#viewerContainer'],
   },
 };
