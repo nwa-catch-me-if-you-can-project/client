@@ -16,6 +16,11 @@ import { ToolbarController } from './toolbar';
  * @prop {number} height
  */
 
+/**
+ * @typedef {Window|HTMLElement} WindowOrHTMLElement
+ * @typedef {Parameters<WindowOrHTMLElement["addEventListener"]>} ArgAddEventListener
+ */
+
 // Minimum width to which the frame can be resized.
 const MIN_RESIZE = 280;
 
@@ -86,6 +91,9 @@ export default class Sidebar extends Guest {
     const sidebarFrame = createSidebarIframe(config);
 
     super(element, { ...defaultConfig, ...config });
+
+    /** @type {Array<{object: WindowOrHTMLElement, eventType: ArgAddEventListener[0], listener:ArgAddEventListener[1]}>} */
+    this.registeredListeners = [];
 
     this.externalFrame = externalFrame;
     this.frame = frame;
@@ -172,6 +180,24 @@ export default class Sidebar extends Guest {
     this._hammerManager?.destroy();
     this.frame?.remove();
     super.destroy();
+  }
+
+  /*
+   * @param {WindowOrHTMLElement} object
+   * @typ {AddEvent extends Parameters<object.addEventListener>} B
+   * @param {ArgAddEventListener[0]} eventType
+   * @param {ArgAddEventListener[1]} listener
+   */
+  _registerEvent(object, eventType, listener) {
+    this.registeredListeners.push({ object, eventType, listener });
+    object.addEventListener(eventType, listener);
+  }
+
+  _unregisterEvent() {
+    this.registeredListeners.forEach(({ object, eventType, listener }) => {
+      object.removeEventListener(eventType, listener);
+    });
+    this.registeredListeners = [];
   }
 
   _setupSidebarEvents() {
