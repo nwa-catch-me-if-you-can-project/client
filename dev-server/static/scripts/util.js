@@ -1,3 +1,11 @@
+ /**
+  * Because the code in this file is not bundled by babel, it must be compatible
+  * with all the supported browsers version (see `browserlist` in `package.json`)
+  * without transpilation. Do not include latest EcmaScript features as these
+  * will cause exceptions while working on dev (`localhost:3000`) on slightly
+  * older, yet supported browser versions.  
+  * /
+
 /** @type {string|null} */
 export let activeClientUrl;
 
@@ -20,6 +28,9 @@ export function loadClient(clientUrl) {
  */
 export function unloadClient() {
   const annotatorLink = document.querySelector('link[type="application/annotator+html"]');
-  annotatorLink?.dispatchEvent(new Event('destroy'));
+
+if (annotatorLink) {
+  annotatorLink.dispatchEvent(new Event('destroy'));
+}
   activeClientUrl = null;
 }
