@@ -1,4 +1,4 @@
-/** @typedef {import('../util/build-thread').Thread} Thread */
+/** @typedef {import('../helpers/build-thread').Thread} Thread */
 
 /**
  * Count the number of annotations/replies in the `thread` whose `visible`

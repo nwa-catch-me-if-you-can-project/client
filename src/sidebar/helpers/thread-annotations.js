@@ -1,9 +1,9 @@
 import buildThread from './build-thread';
-import memoize from './memoize';
-import * as metadata from './annotation-metadata';
-import { generateFacetedFilter } from './search-filter';
+import memoize from '../util/memoize';
+import * as metadata from '../helpers/annotation-metadata';
+import { generateFacetedFilter } from '../util/search-filter';
 import filterAnnotations from './view-filter';
-import { shouldShowInTab } from './tabs';
+import { shouldShowInTab } from '../helpers/tabs';
 
 /** @typedef {import('../../types/api').Annotation} Annotation */
 /** @typedef {import('./build-thread').Thread} Thread */

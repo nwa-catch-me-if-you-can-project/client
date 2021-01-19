@@ -1,5 +1,5 @@
 import buildThread from '../build-thread';
-import * as metadata from '../annotation-metadata';
+import * as metadata from '../../helpers/annotation-metadata';
 
 // Fixture with two top level annotations, one note and one reply
 const SIMPLE_FIXTURE = [
@@ -62,7 +62,7 @@ function createThread(fixture, opts, keys) {
   return rootThread.children;
 }
 
-describe('sidebar/util/build-thread', function () {
+describe('sidebar/helpers/build-thread', function () {
   describe('threading', function () {
     it('arranges parents and children as a thread', function () {
       const thread = createThread(SIMPLE_FIXTURE);
