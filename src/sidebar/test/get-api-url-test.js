@@ -1,6 +1,6 @@
 import getApiUrl from '../get-api-url';
 
-describe('sidebar.getApiUrl', function () {
+describe('sidebar/getApiUrl', function () {
   context('when there is a service object in settings', function () {
     it('returns apiUrl from the service object', function () {
       const settings = {

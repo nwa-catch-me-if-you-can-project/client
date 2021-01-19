@@ -1,4 +1,4 @@
-import { generateHexString } from './random';
+import { generateHexString } from './util/random';
 
 /** Generate a random ID to associate RPC requests and responses. */
 function generateId() {

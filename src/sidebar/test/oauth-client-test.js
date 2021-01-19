@@ -23,7 +23,7 @@ const fixtures = {
   },
 };
 
-describe('sidebar.util.oauth-client', () => {
+describe('sidebar/oauth-client', () => {
   let client;
   let clock;
   const config = {

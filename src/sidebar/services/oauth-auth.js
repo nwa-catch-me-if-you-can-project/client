@@ -1,11 +1,11 @@
 import { TinyEmitter } from 'tiny-emitter';
 
 import serviceConfig from '../service-config';
-import OAuthClient from '../util/oauth-client';
+import OAuthClient from '../oauth-client';
 import { resolve } from '../util/url';
 
 /**
- * @typedef {import('../util/oauth-client').TokenInfo} TokenInfo
+ * @typedef {import('../oauth-client').TokenInfo} TokenInfo
  *
  * @typedef RefreshOptions
  * @property {boolean} persist - True if access tokens should be persisted for

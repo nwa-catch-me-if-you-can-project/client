@@ -1,10 +1,10 @@
-import getApiUrl from '../get-api-url';
-import hostConfig from '../host-config';
+import getApiUrl from './get-api-url';
+import hostConfig from './host-config';
 import * as postMessageJsonRpc from './postmessage-json-rpc';
 
 /**
- * @typedef {import('../../types/config').SidebarConfig} SidebarConfig
- * @typedef {import('../../types/config').MergedConfig} MergedConfig
+ * @typedef {import('../types/config').SidebarConfig} SidebarConfig
+ * @typedef {import('../types/config').MergedConfig} MergedConfig
  */
 
 /**

@@ -1,5 +1,5 @@
 import { Injector } from '../../../shared/injector';
-import FakeWindow from '../../util/test/fake-window';
+import FakeWindow from '../../test/fake-window';
 import authFactory, { $imports } from '../oauth-auth';
 
 const DEFAULT_TOKEN_EXPIRES_IN_SECS = 1000;
@@ -87,7 +87,7 @@ describe('sidebar/services/oauth-auth', function () {
     fakeWindow = new FakeWindow();
 
     $imports.$mock({
-      '../util/oauth-client': FakeOAuthClient,
+      '../oauth-client': FakeOAuthClient,
     });
 
     auth = new Injector()

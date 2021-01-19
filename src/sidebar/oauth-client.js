@@ -1,6 +1,6 @@
 import * as queryString from 'query-string';
 
-import * as random from './random';
+import * as random from './util/random';
 
 /**
  * An object holding the details of an access token from the tokenUrl endpoint.
