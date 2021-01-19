@@ -19,6 +19,7 @@ import { ToolbarController } from './toolbar';
 /**
  * @typedef {Window|HTMLElement} WindowOrHTMLElement
  * @typedef {Parameters<WindowOrHTMLElement["addEventListener"]>} ArgAddEventListener
+ * @typedef {{object: WindowOrHTMLElement, eventType: ArgAddEventListener[0], listener:ArgAddEventListener[1]}} RegisteredListener
  */
 
 // Minimum width to which the frame can be resized.
@@ -58,7 +59,11 @@ function createSidebarIframe(config) {
  * as well as the adjacent controls.
  */
 export default class Sidebar extends Guest {
-  constructor(element, config) {
+  /**
+   * @param {HTMLElement} element
+   * @param {Record<string, any>} config
+   */
+  constructor(element, config, hideOnResize = true) {
     if (config.theme === 'clean' || config.externalContainerSelector) {
       delete config.pluginClasses.BucketBar;
     }
@@ -92,7 +97,7 @@ export default class Sidebar extends Guest {
 
     super(element, { ...defaultConfig, ...config });
 
-    /** @type {Array<{object: WindowOrHTMLElement, eventType: ArgAddEventListener[0], listener:ArgAddEventListener[1]}>} */
+    /** @type {RegisteredListener[]} */
     this.registeredListeners = [];
 
     this.externalFrame = externalFrame;
@@ -125,7 +130,7 @@ export default class Sidebar extends Guest {
     }
 
     if (this.plugins.BucketBar) {
-      this.plugins.BucketBar.element.addEventListener('click', () =>
+      this._registerEvent(this.plugins.BucketBar.element, 'click', () =>
         this.show()
       );
     }
@@ -147,6 +152,10 @@ export default class Sidebar extends Guest {
       // If using a host-page provided container for the sidebar, the toolbar is
       // not shown.
       this.toolbarWidth = 0;
+    }
+
+    if (hideOnResize) {
+      this._registerEvent(window, 'resize', () => this._onResize());
     }
 
     this._gestureState = {
@@ -177,23 +186,23 @@ export default class Sidebar extends Guest {
   }
 
   destroy() {
+    this._unregisterEvents();
     this._hammerManager?.destroy();
     this.frame?.remove();
     super.destroy();
   }
 
-  /*
+  /**
    * @param {WindowOrHTMLElement} object
-   * @typ {AddEvent extends Parameters<object.addEventListener>} B
    * @param {ArgAddEventListener[0]} eventType
    * @param {ArgAddEventListener[1]} listener
    */
   _registerEvent(object, eventType, listener) {
-    this.registeredListeners.push({ object, eventType, listener });
     object.addEventListener(eventType, listener);
+    this.registeredListeners.push({ object, eventType, listener });
   }
 
-  _unregisterEvent() {
+  _unregisterEvents() {
     this.registeredListeners.forEach(({ object, eventType, listener }) => {
       object.removeEventListener(eventType, listener);
     });
@@ -241,11 +250,11 @@ export default class Sidebar extends Guest {
     const toggleButton = this.toolbar.sidebarToggleButton;
     if (toggleButton) {
       // Prevent any default gestures on the handle.
-      toggleButton.addEventListener('touchmove', e => e.preventDefault());
+      this._registerEvent(toggleButton, 'touchmove', e => e.preventDefault());
 
-      this._hammerManager = new Hammer.Manager(toggleButton)
-        // eslint-disable-next-line no-restricted-properties
-        .on('panstart panend panleft panright', this._onPan.bind(this));
+      this._hammerManager = new Hammer.Manager(
+        toggleButton
+      ).on('panstart panend panleft panright', () => this._onPan());
       this._hammerManager.add(
         new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL })
       );
@@ -332,6 +341,15 @@ export default class Sidebar extends Guest {
       this.onLayoutChange(layoutState);
     }
     this.publish('sidebarLayoutChanged', [layoutState]);
+  }
+
+  /**
+   * Minimize the sidebar on window resize event
+   */
+  _onResize() {
+    if (this.toolbar.sidebarOpen === true) {
+      this.hide();
+    }
   }
 
   _onPan(event) {
