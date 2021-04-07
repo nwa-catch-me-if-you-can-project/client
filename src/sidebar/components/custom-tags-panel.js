@@ -29,7 +29,8 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
     const focusedGroup = store.focusedGroup();
     const panelTitle = 'Upload custom tags';
     const [inputValue, setInputValue] = useState('');
-
+    const [replaceTags, set_is_checked]= useState(false);
+    const papa = require('papaparse');
     // To be able to concoct a sharing link, a focused group and frame need to
     // be available
     const sharingReady = focusedGroup && mainFrame;
@@ -38,18 +39,237 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
         sharingReady &&
         pageSharingLink(notNull(mainFrame).uri, notNull(focusedGroup).id);
 
-    const fetchSug = async (link) => {
+    const fetchSugStore = async (link) => {
+        console.log("store");
+        console.log("val: ", replaceTags);
         const isCsvFile = link.endsWith('.csv');
-        const response = await fetch(link);
-        const responseText = await response.text();
-        const splittedText = await responseText.split('\n');
-        tagsService.store(splittedText.map(tag => ({ text: tag })));
-        if (isCsvFile && response){
-            toastMessenger.success('Added the custom tags from the link');
-        } else {
-            toastMessenger.error('Unable to fetch the link');
-        }
+        var tagTooltipMap = [];
 
+        papa.parse(link, {
+            download: true,
+            complete: function(results, link) {
+                console.log('papa complete: ', results, link); 
+                if (isCsvFile){
+                    var numRows = results.data.length
+                    if (numRows > 0){
+                        var numColumns = results.data[0].length;
+                        if (numColumns > 1){
+                            var startRow = 0;
+                            if (results.data[0][0] == "text" || results.data[0][1] == "tooltip"){
+                                startRow = 1;
+                            }
+                            for (var i = startRow; i < numRows; i++) {
+                                if (results.data[i].length > 1){
+                                    console.log(i, " : ", results.data[i]);
+                                    tagTooltipMap.push({text: results.data[i][0], tooltip: results.data[i][1]});
+                                }
+                            }
+                        }
+                        else{
+                            if (numColumns == 1){
+                                var startRow2 = 0;
+                                if (results.data[0][0] == "text"){
+                                    startRow2 = 1;
+                                }                               
+                                for (var j = startRow2; j < numRows; j++) {
+                                    if (results.data[j].length == 1){
+                                        console.log(j, " : ", results.data[j]);
+                                        tagTooltipMap.push({text: results.data[j][0]});
+                                    }
+                                    tagTooltipMap.push({text: results.data[j][0]});
+                                }
+                            }
+                            else{
+                                console.log("Error cols: CSV file is empty or unreadable.")
+                            }
+                        }
+
+                    }
+                    else{
+                        console.log("Error rows: CSV file is empty or unreadable.")
+                    }
+                    console.log('tagTooltipMap: ', tagTooltipMap);
+                    tagsService.store(tagTooltipMap);     
+                    toastMessenger.success('Added the custom tags from the link');
+                } 
+                else {
+                    toastMessenger.error('Unable to fetch the link');
+                }
+            }
+        });
+    };
+
+    const fetchSugReplace = async (link) => {
+        console.log("replace");
+        console.log("val: ", replaceTags);
+        const isCsvFile = link.endsWith('.csv');
+        var tagTooltipMap = [];
+
+        papa.parse(link, {
+            download: true,
+            complete: function(results, link) {
+                console.log('papa complete: ', results, link); 
+                if (isCsvFile){
+                    var numRows = results.data.length
+                    if (numRows > 0){
+                        var numColumns = results.data[0].length;
+                        if (numColumns > 1){
+                            var startRow = 0;
+                            if (results.data[0][0] == "text" || results.data[0][1] == "tooltip"){
+                                startRow = 1;
+                            }
+                            for (var i = startRow; i < numRows; i++) {
+                                if (results.data[i].length > 1){
+                                    console.log(i, " : ", results.data[i]);
+                                    tagTooltipMap.push({text: results.data[i][0], tooltip: results.data[i][1]});
+                                }
+                            }
+                        }
+                        else{
+                            if (numColumns == 1){
+                                var startRow2 = 0;
+                                if (results.data[0][0] == "text"){
+                                    startRow2 = 1;
+                                }                               
+                                for (var j = startRow2; j < numRows; j++) {
+                                    if (results.data[j].length == 1){
+                                        console.log(j, " : ", results.data[j]);
+                                        tagTooltipMap.push({text: results.data[j][0]});
+                                    }
+                                    tagTooltipMap.push({text: results.data[j][0]});
+                                }
+                            }
+                            else{
+                                console.log("Error cols: CSV file is empty or unreadable.")
+                            }
+                        }
+
+                    }
+                    else{
+                        console.log("Error rows: CSV file is empty or unreadable.")
+                    }
+                    console.log('tagTooltipMap: ', tagTooltipMap);
+                    tagsService.replace(tagTooltipMap);   
+                    toastMessenger.success('Replaced existing tags with those from the link');
+                } 
+                else {
+                    toastMessenger.error('Unable to fetch the link');
+                }
+            }
+        });
+    };
+
+    const uploadTagsReplace = (e) => {
+        //console.log("file: ",e.target.files[0]);
+        const isCsvFile = e.target.files[0].name.endsWith('.csv');
+        var tagTooltipMap = [];
+        papa.parse(e.target.files[0], {
+            complete: function(results, fileDataURL) {
+                console.log("results: ", results);
+                if (isCsvFile){
+                    var numRows = results.data.length
+                    if (numRows > 0){
+                        var numColumns = results.data[0].length;
+                        if (numColumns > 1){
+                            var startRow = 0;
+                            if (results.data[0][0] == "text" || results.data[0][1] == "tooltip"){
+                                startRow = 1;
+                            }
+                            for (var i = startRow; i < numRows; i++) {
+                                if (results.data[i].length > 1){
+                                    console.log(i, " : ", results.data[i]);
+                                    tagTooltipMap.push({text: results.data[i][0], tooltip: results.data[i][1]});
+                                }
+                            }
+                        }
+                        else{
+                            if (numColumns == 1){
+                                var startRow2 = 0;
+                                if (results.data[0][0] == "text"){
+                                    startRow2 = 1;
+                                }                               
+                                for (var j = startRow2; j < numRows; j++) {
+                                    if (results.data[j].length == 1){
+                                        console.log(j, " : ", results.data[j]);
+                                        tagTooltipMap.push({text: results.data[j][0]});
+                                    }
+                                    tagTooltipMap.push({text: results.data[j][0]});
+                                }
+                            }
+                            else{
+                                console.log("Error cols: CSV file is empty or unreadable.")
+                            }
+                        }
+
+                    }
+                    else{
+                        console.log("Error rows: CSV file is empty or unreadable.")
+                    }
+                    console.log('tagTooltipMap: ', tagTooltipMap);
+                    tagsService.replace(tagTooltipMap);   
+                    toastMessenger.success('Replaced existing tags with those from the file');
+                } 
+                else {
+                    toastMessenger.error('Unable to load the file');
+                }
+            }
+        });
+    };
+
+    const uploadTagsStore = (e) => {
+        const isCsvFile = e.target.files[0].name.endsWith('.csv');
+        var tagTooltipMap = [];
+        papa.parse(e.target.files[0], {
+            complete: function(results, fileDataURL) {
+                console.log("results: ", results);
+                if (isCsvFile){
+                    var numRows = results.data.length
+                    if (numRows > 0){
+                        var numColumns = results.data[0].length;
+                        if (numColumns > 1){
+                            var startRow = 0;
+                            if (results.data[0][0] == "text" || results.data[0][1] == "tooltip"){
+                                startRow = 1;
+                            }
+                            for (var i = startRow; i < numRows; i++) {
+                                if (results.data[i].length > 1){
+                                    console.log(i, " : ", results.data[i]);
+                                    tagTooltipMap.push({text: results.data[i][0], tooltip: results.data[i][1]});
+                                }
+                            }
+                        }
+                        else{
+                            if (numColumns == 1){
+                                var startRow2 = 0;
+                                if (results.data[0][0] == "text"){
+                                    startRow2 = 1;
+                                }                               
+                                for (var j = startRow2; j < numRows; j++) {
+                                    if (results.data[j].length == 1){
+                                        console.log(j, " : ", results.data[j]);
+                                        tagTooltipMap.push({text: results.data[j][0]});
+                                    }
+                                    tagTooltipMap.push({text: results.data[j][0]});
+                                }
+                            }
+                            else{
+                                console.log("Error cols: CSV file is empty or unreadable.")
+                            }
+                        }
+
+                    }
+                    else{
+                        console.log("Error rows: CSV file is empty or unreadable.")
+                    }
+                    console.log('tagTooltipMap: ', tagTooltipMap);
+                    tagsService.store(tagTooltipMap);   
+                    toastMessenger.success('Added tags from the file');
+                } 
+                else {
+                    toastMessenger.error('Unable to load the file');
+                }
+            }
+        });
     };
 
     return (
@@ -67,14 +287,7 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
                     {shareURI ? (
                         <Fragment>
                             <div className="share-annotations-panel__intro">
-                                {notNull(focusedGroup).type === 'private' ? (
-                                    <p>
-                                        Use this link to share these annotations with other group
-                                        members:
-                                    </p>
-                                ) : (
-                                    <p>Paste the link to a CSV file containing custom tags:</p>
-                                )}
+                                <p>Paste the link to a CSV file containing custom tags:</p>
                             </div>
                             <div className="u-layout-row">
                                 <input
@@ -85,11 +298,34 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
                                     // @ts-ignore
                                     onChange={e => setInputValue(e.target.value)}
                                 />
+
                                 <Button
-                                    icon="copy"
-                                    onClick={() => fetchSug(inputValue)}
-                                    title="Copy share link"
+                                    icon="add"
+                                    onClick={replaceTags === true ? () => fetchSugReplace(inputValue) : () => fetchSugStore(inputValue)}
+                                    title="Add tags"
                                     className="share-annotations-panel__icon-button"
+                                />
+                            </div>
+                            <div className="share-annotations-panel__intro">
+                                    <p>Replace existing tags?&nbsp;&nbsp;&nbsp;
+                                    <input
+                                        checked={replaceTags}
+                                        onChange={() => set_is_checked(!replaceTags)}
+                                        aria-label="Replace existing tags?"
+                                        title="Replace existing tags?"
+                                        type="checkbox"
+                                        // onChange={e => setReplaceValue(e.target.value)}
+                                    /> 
+                                    </p>
+                            </div>
+                            <div className="share-annotations-panel__intro">
+                                <p>Upload custom tags from local CSV file:</p>
+                            </div>
+                            <div className="share-annotations-panel__intro">
+                                <input 
+                                    type="file" 
+                                    className="share-annotations-panel__form-input" 
+                                    onChange={replaceTags === true ? e => uploadTagsReplace(e) : e => uploadTagsStore(e)} 
                                 />
                             </div>
                         </Fragment>

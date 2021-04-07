@@ -335,6 +335,7 @@ function TagEditor({
           onSelectItem={handleSelect}
           itemPrefixId={`${tagEditorId}-autocomplete-list-item-`}
           activeItem={activeItem}
+          tags={tagsService}
         />
       </span>
     </div>

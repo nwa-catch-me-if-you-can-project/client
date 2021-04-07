@@ -3,6 +3,10 @@ import classnames from 'classnames';
 import { useMemo, useState, useEffect } from 'preact/hooks';
 import propTypes from 'prop-types';
 
+/** */
+import { withServices } from '../util/service-context';
+/** */
+
 const defaultListFormatter = item => item;
 
 /**
@@ -43,30 +47,44 @@ export default function AutocompleteList({
   listFormatter = defaultListFormatter,
   onSelectItem,
   open = false,
+  tags: tagsService
 }) {
-  const [tooltips, setTooltips] = useState(['']);
-  const fetchTooltips = async () => {
-      const response = await fetch('https://raw.githubusercontent.com/MaastrichtU-IDS/cbcm-ontology/master/working_copy/tooltips1.csv');
-      const responseText = await response.text();
-      const splittedText = await responseText.split('\n');
-      setTooltips(splittedText);
-  };
+  // console.log("id: ", id);
+  // console.log("itemPrefixId: ", itemPrefixId);
+  //console.log("list: ", list);
 
-  useEffect(() => {
-    fetchTooltips();
-  },[]);
+  // const [tooltips, setTooltips] = useState(['']);
+
+  /** */
+  const tagMap = tagsService.getTagMap();
+  /** */
+
+  // const fetchTooltips = async () => {
+  //     const response = await fetch('https://raw.githubusercontent.com/MaastrichtU-IDS/cbcm-ontology/master/working_copy/tooltips1.csv');
+  //     const responseText = await response.text();
+  //     const splittedText = await responseText.split('\n');
+  //     setTooltips(splittedText);
+  // };
+
+  // useEffect(() => {
+  //   fetchTooltips();
+  // },[]);
 
   const items = useMemo(() => {
     return list.map((item, index) => {
       // only add an id if itemPrefixId is passed
       const props = itemPrefixId ? { id: `${itemPrefixId}${index}` } : {};
-
+      // console.log("item: ", item);
+      // console.log("tagMap[item]: ", tagMap[item]);
+      // console.log("index: ", index);
+      // console.log("tagMap[item][tooltip]: ", tagMap[item]["tooltip"]);
+      // console.log("list: ", list);
       return (
         // The parent <input> field should capture keyboard events
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events
           <li
             key={`autocomplete-list-${index}`}
-            title={tooltips[index]}
+            title={(item === undefined || tagMap[item] === undefined) ? "No tooltip" : tagMap[item]["tooltip"]}
             role="option"
             aria-selected={(activeItem === index).toString()}
             className={classnames(
@@ -76,6 +94,7 @@ export default function AutocompleteList({
               'autocomplete-list__li'
             )}
             onClick={() => {
+              // console.log("item: ", item);
               onSelectItem(item);
             }}
             {...props}
@@ -84,7 +103,7 @@ export default function AutocompleteList({
           </li>
       );
     });
-  }, [tooltips, activeItem, itemPrefixId, list, listFormatter, onSelectItem]);
+  }, [activeItem, itemPrefixId, list, listFormatter, onSelectItem]);
 
   const props = id ? { id } : {}; // only add the id if its passed
   const isHidden = list.length === 0 || !open;
@@ -123,4 +142,9 @@ AutocompleteList.propTypes = {
   listFormatter: propTypes.func,
   onSelectItem: propTypes.func.isRequired,
   open: propTypes.bool,
+  tags: propTypes.object.isRequired,
 };
+
+AutocompleteList.injectedProps = ['tags'];
+
+withServices(AutocompleteList);

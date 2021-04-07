@@ -70,6 +70,10 @@ function TopBar({
     uiConstants.PANEL_SHARE_ANNOTATIONS
   );
 
+  const isCustomTagsPanelOpen = store.isSidebarPanelOpen(
+    uiConstants.CUSTOM_TAG_PANEL
+  );
+
   /**
    * Open the help panel, or, if a service callback is configured to handle
    * help requests, fire a relevant event instead
@@ -160,7 +164,7 @@ function TopBar({
           <Button
               className="top-bar__icon-button"
               icon="upload"
-              isExpanded={isAnnotationsPanelOpen}
+              isExpanded={isCustomTagsPanelOpen}
               onClick={toggleCustomTagsPanel}
               title="Specify custom annotation tags"
           />
