@@ -91,7 +91,8 @@ export default function AutocompleteList({
               {
                 'is-selected': activeItem === index,
               },
-              'autocomplete-list__li'
+              `autocomplete-list__li${tagMap[item]["type"]}`
+              //'autocomplete-list__li'
             )}
             onClick={() => {
               // console.log("item: ", item);

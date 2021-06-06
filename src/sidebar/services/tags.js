@@ -88,15 +88,36 @@ export default function tags(localStorage) {
   function replace(tags) {
     // Update the stored (tag, frequency) map.
     const savedTags = {};
+    localStorage.removeItem(TAGS_LIST_KEY);
+    localStorage.removeItem(TAGS_MAP_KEY);
     tags.forEach(tag => {
       if (savedTags[tag.text]) {
         savedTags[tag.text].count += 1;
         savedTags[tag.text].updated = Date.now();
       } else {
-        if (tag.hasOwnProperty('tooltip')){
+        if (tag.hasOwnProperty('tooltip') && tag.hasOwnProperty('type')){
           savedTags[tag.text] = {
             text: tag.text,
             tooltip: tag.tooltip,
+            type: tag.type,
+            count: 1,
+            updated: Date.now(),
+          };
+        }
+        else if (tag.hasOwnProperty('tooltip') && !tag.hasOwnProperty('type')){
+          savedTags[tag.text] = {
+            text: tag.text,
+            tooltip: tag.tooltip,
+            type: "",
+            count: 1,
+            updated: Date.now(),
+          };
+        }
+        else if (!tag.hasOwnProperty('tooltip') && tag.hasOwnProperty('type')){
+          savedTags[tag.text] = {
+            text: tag.text,
+            tooltip: tag.text,
+            type: tag.type,
             count: 1,
             updated: Date.now(),
           };
@@ -105,6 +126,7 @@ export default function tags(localStorage) {
            savedTags[tag.text] = {
             text: tag.text,
             tooltip: tag.text,
+            type: "",
             count: 1,
             updated: Date.now(),
           };         
@@ -138,10 +160,29 @@ export default function tags(localStorage) {
         savedTags[tag.text].count += 1;
         savedTags[tag.text].updated = Date.now();
       } else {
-        if (tag.hasOwnProperty('tooltip')){
+        if (tag.hasOwnProperty('tooltip') && tag.hasOwnProperty('type')){
           savedTags[tag.text] = {
             text: tag.text,
             tooltip: tag.tooltip,
+            type: tag.type,
+            count: 1,
+            updated: Date.now(),
+          };
+        }
+        else if (tag.hasOwnProperty('tooltip') && !tag.hasOwnProperty('type')){
+          savedTags[tag.text] = {
+            text: tag.text,
+            tooltip: tag.tooltip,
+            type: "",
+            count: 1,
+            updated: Date.now(),
+          };
+        }
+        else if (!tag.hasOwnProperty('tooltip') && tag.hasOwnProperty('type')){
+          savedTags[tag.text] = {
+            text: tag.text,
+            tooltip: tag.text,
+            type: tag.type,
             count: 1,
             updated: Date.now(),
           };
@@ -150,6 +191,7 @@ export default function tags(localStorage) {
            savedTags[tag.text] = {
             text: tag.text,
             tooltip: tag.text,
+            type: "",
             count: 1,
             updated: Date.now(),
           };         
