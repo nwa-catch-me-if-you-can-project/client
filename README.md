@@ -1,4 +1,4 @@
-![Hypothesis custom tags icon](/images/hypothesis_icon_custom_tags.png?thumbnail)
+![Hypothesis custom tags icon](/images/hypothesis_icon_custom_tags.png){ width=40% }
 
 Hypothesis Custom Tags client
 =============================
