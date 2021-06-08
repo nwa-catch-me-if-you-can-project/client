@@ -46,6 +46,13 @@ The same instructions apply to building this Custom Tags extension.
 
 [developers]: https://h.readthedocs.io/projects/client/en/latest/developers/
 
+Developers
+----------
+
++ [Alex Olteanu](https://github.com/oltyx), [RiskSearch B.V.](https://risksearch.eu/#home) 
++ [Kody Moodley](https://github.com/kodymoodley), [Maastricht University](https://www.maastrichtuniversity.nl/kody.moodley)
++ Cristiana Filip, [RiskSearch B.V.](https://risksearch.eu/#home) 
+
 License
 -------
 
