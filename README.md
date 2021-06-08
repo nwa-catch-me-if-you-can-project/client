@@ -1,5 +1,7 @@
-Hypothesis client
-=================
+![Hypothesis custom tags icon](/images/hypothesis_icon_custom_tags.png?raw=true)
+
+Hypothesis Custom Tags client
+=============================
 
 [![Continuous integration](https://github.com/hypothesis/client/workflows/Continuous%20integration/badge.svg?branch=master)][gha]
 [![npm version](https://img.shields.io/npm/v/hypothesis.svg)][npm]
@@ -14,7 +16,24 @@ pages. It’s a client for the [Hypothesis web annotation service][service].
 It’s used by the [Hypothesis browser extension][ext], and can also be
 [embedded directly into web pages][embed].
 
-![Screenshot of Hypothesis client](/images/screenshot.png?raw=true)
+The Hypothesis Custom Tags extension adds the feature of importing custom 
+annotation tags from an input CSV file, either from a remote URL on the Web
+or from a local file.
+
+![Screenshot of Hypothesis custom tags client](/images/interface-with-labels.png?raw=true)
+
+The input CSV file required should follow the following specification:
+
+![Hypothesis custom tags input file format](/images/inputfileformat.png?raw=true)
+
+Screenshot of the Custom Tags annotation panel:
+
+![Hypothesis custom tags panel screenshot](/images/custom-tags-panel.png?raw=true)
+
+Screenshot of the Custom Tags autocomplete dropdown with different
+text colors for tag types and descriptive tooltips for tags:
+
+![Hypothesis custom tags add annotation tags panel screenshot](/images/add-annotations-panel.png?raw=true)
 
 [service]: https://github.com/hypothesis/h
 [ext]: https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek
@@ -47,10 +66,8 @@ Conduct][coc]. By participating in this project you agree to abide by its terms.
 License
 -------
 
-The Hypothesis client is released under the [2-Clause BSD License][bsd2c],
-sometimes referred to as the "Simplified BSD License". Some third-party
-components are included. They are subject to their own licenses. All of the
-license information can be found in the included [LICENSE][license] file.
+All of the license information for the Hypothesis Custom Tags extension
+can be found in the included [LICENSE][license] file.
 
 [bsd2c]: http://www.opensource.org/licenses/BSD-2-Clause
-[license]: https://github.com/hypothesis/client/blob/master/LICENSE
+[license]: https://github.com/nwa-catch-me-if-you-can-project/client/blob/master/LICENSE
