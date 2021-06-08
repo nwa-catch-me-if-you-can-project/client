@@ -41,6 +41,7 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
 
     var tagTooltipMap = [];
 
+    // Reads tags from input CSV file and adds them to localStorage autocomplete tag list
     const getFullTagInfoFile = (e,replace) => {
         const isCsvFile = e.target.files[0].name.endsWith('.csv');
         tagTooltipMap = [];
@@ -133,6 +134,7 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
         });
     };
 
+    // Reads tags from CSV file located at given remote URL and adds them to localStorage autocomplete tag list
     const getFullTagInfoLink = async (link,replace) => {
         const isCsvFile = link.endsWith('.csv');
         tagTooltipMap = [];
@@ -226,18 +228,22 @@ function CustomTagsPanel({ toastMessenger, tags: tagsService }) {
         });
     };
 
+    // Reads tags from input CSV file located at specified URL and ADDS them to localStorage autocomplete tag list
     const fetchSugStore = async (link) => {
         getFullTagInfoLink(link,0);
     };
 
+    // Reads tags from input CSV file located at specified URL and OVERWRITES existing tags in localStorage with these
     const fetchSugReplace = async (link) => {
         getFullTagInfoLink(link,1);
     };
 
+    // Reads tags from input CSV file and ADDS them to localStorage autocomplete tag list
     const uploadTagsStore = (e) => {
         getFullTagInfoFile(e,0);
     };
 
+    // Reads tags from input CSV file and OVERWRITES existing tags in localStorage with these
     const uploadTagsReplace = (e) => {
         getFullTagInfoFile(e,1);
     };
