@@ -11,8 +11,10 @@ Hypothesis Custom Tags client
 [npm]: https://www.npmjs.com/package/hypothesis
 [license]: https://github.com/nwa-catch-me-if-you-can-project/client/blob/master/LICENSE
 
-[The Hypothesis client](https://github.com/hypothesis/client/).
-It’s used by the [Hypothesis browser extension][ext].
+[The Hypothesis client](https://github.com/hypothesis/client/) is a 
+browser-based tool for making annotations on web pages. It’s used by
+the [Hypothesis browser extension][ext], and can also be embedded
+directly into web pages.
 
 The Hypothesis Custom Tags extension adds the feature of importing custom 
 annotation tags from an input CSV file, either from a remote URL on the Web
