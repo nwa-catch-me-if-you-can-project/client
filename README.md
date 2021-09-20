@@ -37,6 +37,12 @@ text colors for tag types and descriptive tooltips for tags:
 
 [ext]: https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek
 
+Installation
+-------------
+
+Windows: [instructions](https://docs.google.com/document/d/18t1icQE1AM4sYd37fSlJwRkviK9416notk6QFkGxrps/edit?usp=sharing)
+Mac: [instructions](https://docs.google.com/document/d/1WOQL3R_opiqtZqJifJJSWMqvXv9LYbEv_zz4qahd3JE/edit?usp=sharing)
+
 Development
 -----------
 
